@@ -15,10 +15,20 @@ def get_ranges(str_range: str) -> list[range]:
 
 def is_valid_id(id_: int):
     str_id = str(id_)
-    if len(str_id) % 2 == 1:
-        return False
+    length = len(str_id)
 
-    return True
+    # Odd length can't produce perfect duplicates
+    # hence valid
+    if length % 2 == 1:
+        return True
+
+    half_length = length // 2
+
+    # First half different from second half
+    if str_id[:half_length] != str_id[half_length:]:
+        return True
+
+    return False
 
 
 def check_ids(ranges: list[range]) -> list[int]:
