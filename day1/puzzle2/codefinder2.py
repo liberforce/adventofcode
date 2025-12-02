@@ -60,9 +60,8 @@ def solve(instr: list[str]):
     for code in instr:
         dial.turn(code[0], int(code[1:]))
 
-    LOGGER.info(f"{dial.n_stopped_on_zero=}")
-    LOGGER.info(f"{dial.n_passed_on_zero=}")
-    print(dial.n_passed_on_zero + dial.n_stopped_on_zero)
+    print(f"{dial.n_stopped_on_zero=}")
+    print(f"{dial.n_passed_on_zero=}")
 
 
 def main():
