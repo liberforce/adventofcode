@@ -24,8 +24,8 @@ def is_valid_id(id_: int):
 def check_ids(ranges: list[range]) -> list[int]:
     invalid_ids: list[int] = []
 
-    for rangeset in ranges:
-        for id_ in rangeset:
+    for range_ in ranges:
+        for id_ in range_:
             if not is_valid_id(id_):
                 invalid_ids.append(id_)
                 LOGGER.debug("Found invalid id: %d", id_)
