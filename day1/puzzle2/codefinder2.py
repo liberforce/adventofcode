@@ -10,29 +10,36 @@ class Dial:
         self.n_stopped_on_zero = 0
         LOGGER.debug("Initialized at %s", self.value)
 
-    def check_position(self):
-        if self.value == 0:
-            self.n_stopped_on_zero += 1
+    def incr_stopped(self):
+        self.n_stopped_on_zero += 1
+
         LOGGER.debug(
             "Ended on %s%s",
             self.value,
             (", incrementing" if self.value == 0 else ""),
         )
 
-    def clamp(self, offset: int) -> int:
-        self.n_passed_on_zero += offset // 100
-        clamped = offset % 100
-        return clamped
+    def incr_passed(self, turns):
+        self.n_passed_on_zero += turns
+
+    def set_value(self, value):
+        clamped_value = value % 100
+        n_times_passed = value // 100
+
+        if clamped_value == 0:
+            self.incr_stopped()
+            n_times_passed -= 1
+
+        self.incr_passed(n_times_passed)
+        self.value = clamped_value
 
     def turn_right(self, offset):
-        offset = self.clamp(offset)
-        self.value = self.clamp(self.value + offset)
-        self.check_position()
+        value = self.value + offset
+        self.set_value(value)
 
     def turn_left(self, offset):
-        offset = self.clamp(offset)
-        self.value = self.clamp(self.value - offset)
-        self.check_position()
+        value = self.value - offset
+        self.set_value(value)
 
     def turn(self, direction: str, offset: int):
         turn = {"L": self.turn_left, "R": self.turn_right}
