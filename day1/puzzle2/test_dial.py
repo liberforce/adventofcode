@@ -164,3 +164,47 @@ def test_dial_passed_on_turn_left(
     dial = Dial(50)
     dial.turn_left(turned)
     assert dial.n_passed_on_zero == expected_passed
+
+
+def test_dial_passed_step_by_step():
+    dial = Dial(50)
+
+    dial.turn_left(68)
+    assert dial.value == 82
+    assert dial.n_passed_on_zero == 1
+
+    dial.turn_left(30)
+    assert dial.value == 52
+    assert dial.n_passed_on_zero == 1
+
+    dial.turn_right(48)
+    assert dial.value == 0
+    assert dial.n_passed_on_zero == 2
+
+    dial.turn_left(5)
+    assert dial.value == 95
+    assert dial.n_passed_on_zero == 2
+
+    dial.turn_right(60)
+    assert dial.value == 55
+    assert dial.n_passed_on_zero == 3
+
+    dial.turn_left(55)
+    assert dial.value == 0
+    assert dial.n_passed_on_zero == 4
+
+    dial.turn_left(1)
+    assert dial.value == 99
+    assert dial.n_passed_on_zero == 4
+
+    dial.turn_left(99)
+    assert dial.value == 0
+    assert dial.n_passed_on_zero == 5
+
+    dial.turn_right(14)
+    assert dial.value == 14
+    assert dial.n_passed_on_zero == 5
+
+    dial.turn_left(82)
+    assert dial.value == 32
+    assert dial.n_passed_on_zero == 6
