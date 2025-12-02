@@ -1,11 +1,28 @@
 import pytest
 
-from find_sum_of_bad_ids import check_ids, get_ranges
+from find_sum_of_bad_ids import check_ids, get_ranges, is_valid_id
 
 
 def test_get_ranges():
     assert get_ranges("1-2") == [range(1, 3)]
     assert get_ranges("1-2,11-22") == [range(1, 3), range(11, 23)]
+
+
+@pytest.mark.parametrize(
+    "invalid_id",
+    [
+        11,
+        22,
+        99,
+        1010,
+        1188511885,
+        222222,
+        446446,
+        38593859,
+    ],
+)
+def test_check_invalid_ids(invalid_id):
+    assert not is_valid_id(invalid_id)
 
 
 @pytest.mark.parametrize(
