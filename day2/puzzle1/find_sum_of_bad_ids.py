@@ -14,7 +14,7 @@ def get_ranges(str_range: str) -> list[range]:
 
 
 def is_valid_id(id_: int):
-    str_id = str(id)
+    str_id = str(id_)
     if len(str_id) % 2 == 1:
         return False
 
