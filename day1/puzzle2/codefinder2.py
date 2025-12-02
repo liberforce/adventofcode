@@ -16,13 +16,19 @@ class Dial:
             self.n_stopped_on_zero += 1
 
     def update_passed_count(self, value):
-        passed = abs(value // 100)
+        is_on_zero = self.value == 0
+        is_turned_left = value < self.value
 
-        if self.value > 0 and value == 0:
-            passed += 1
-
-        if self.value == 0 and value < 0:
-            passed -= 1
+        if is_on_zero:
+            if is_turned_left:
+                passed = abs((value + 99) // 100)
+            else:
+                passed = abs(value // 100)
+        else:
+            if is_turned_left:
+                passed = abs((value - 1) // 100)
+            else:
+                passed = abs(value // 100)
 
         if passed > 0:
             LOGGER.debug("Incrementing passed count: %d", passed)
