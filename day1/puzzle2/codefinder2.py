@@ -10,28 +10,31 @@ class Dial:
         self.n_stopped_on_zero = 0
         LOGGER.debug("Initialized at %s", self.value)
 
-    def incr_stopped(self):
-        self.n_stopped_on_zero += 1
+    def update_stopped_count(self, value):
+        if value % 100 == 0:
+            self.n_stopped_on_zero += 1
 
-        LOGGER.debug(
-            "Ended on %s%s",
-            self.value,
-            (", incrementing" if self.value == 0 else ""),
-        )
+        LOGGER.debug("Incrementing stopped count")
 
-    def incr_passed(self, turns):
-        self.n_passed_on_zero += turns
+    def update_passed_count(self, value):
+        passed = abs(value // 100) if value < 0 or value > 100 else 0
+        is_stopped_on_zero = value % 100 == 0
+
+        # If it stopped on 0, it's not considered a pass,
+        # unless there was a whole turn
+        if is_stopped_on_zero and value > 0 and passed > 0:
+            passed -= 1
+
+        self.n_passed_on_zero += passed
 
     def set_value(self, value):
+        self.update_stopped_count(value)
+        self.update_passed_count(value)
+
         clamped_value = value % 100
-        n_times_passed = value // 100
-
-        if clamped_value == 0:
-            self.incr_stopped()
-            n_times_passed -= 1
-
-        self.incr_passed(n_times_passed)
         self.value = clamped_value
+
+        LOGGER.debug("Ended on %s", self.value)
 
     def turn_right(self, offset):
         value = self.value + offset
