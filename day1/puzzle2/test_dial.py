@@ -134,13 +134,14 @@ def test_dial_stopped_on_turn_left(
         (251, 3),
     ],
 )
-def test_dial_passed_on_turn_righ(
+def test_dial_passed_on_turn_right(
     turned,
     expected_passed,
 ):
     dial = Dial(50)
     dial.turn_right(turned)
     assert dial.n_passed_on_zero == expected_passed
+
 
 @pytest.mark.parametrize(
     "turned, expected_passed",
