@@ -13,22 +13,45 @@ def get_ranges(str_range: str) -> list[range]:
     return ranges
 
 
+def cut_in(string: str, n_slices: int) -> list[str]:
+    if len(string) % n_slices != 0:
+        # Can't be cut exactly in that amount of slices
+        raise ValueError
+
+    slice_length = len(string) // n_slices
+    slices = []
+
+    for idx in range(n_slices):
+        a_slice = string[idx * slice_length : (idx + 1) * slice_length]
+        slices.append(a_slice)
+
+    return slices
+
+
+def are_slices_equal(slices: list[str]):
+    reference = slices.pop()
+    for slice_ in slices:
+        if slice_ != reference:
+            return False
+
+    return True
+
+
 def is_valid_id(id_: int):
     str_id = str(id_)
     length = len(str_id)
 
-    # Odd length can't produce perfect duplicates
-    # hence valid
-    if length % 2 == 1:
-        return True
+    # At most, all digits could be identical
+    for n_slices in range(2, length + 1):
+        try:
+            slices = cut_in(str_id, n_slices)
+        except ValueError:
+            pass
+        else:
+            if are_slices_equal(slices):
+                return False
 
-    half_length = length // 2
-
-    # First half different from second half
-    if str_id[:half_length] != str_id[half_length:]:
-        return True
-
-    return False
+    return True
 
 
 def check_ids(ranges: list[range]) -> list[int]:
