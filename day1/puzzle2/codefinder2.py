@@ -16,12 +16,12 @@ class Dial:
             self.n_stopped_on_zero += 1
 
     def update_passed_count(self, value):
-        passed = abs(value // 100) if value < 0 or value > 100 else 0
-        is_stopped_on_zero = value % 100 == 0
+        passed = abs(value // 100)
 
-        # If it stopped on 0, it's not considered a pass,
-        # unless there was a whole turn
-        if is_stopped_on_zero and value > 0 and passed > 0:
+        if self.value > 0 and value == 0:
+            passed += 1
+
+        if self.value == 0 and value < 0:
             passed -= 1
 
         if passed > 0:
@@ -30,11 +30,12 @@ class Dial:
 
     def set_value(self, value):
         clamped_value = value % 100
-        self.value = clamped_value
-        LOGGER.debug("Ended on %s", self.value)
+        LOGGER.debug("Ended on %s", clamped_value)
 
         self.update_stopped_count(value)
         self.update_passed_count(value)
+
+        self.value = clamped_value
 
     def turn_right(self, offset):
         value = self.value + offset
